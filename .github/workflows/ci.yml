@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET Framework Reference Assemblies
+        run: |
+          git clone git@github.com:arisu-91/dotnet.Reference.Assemblies.git "$env:TEMP\dotnet.Reference.Assemblies"
+          Copy-Item -Path "$env:TEMP\dotnet.Reference.Assemblies\Reference Assemblies" -Destination "C:\Program Files (x86)\Reference Assemblies" -Recurse -Force
+          Remove-Item -Path "$env:TEMP\dotnet.Reference.Assemblies" -Recurse -Force
+        shell: pwsh
